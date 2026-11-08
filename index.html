@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#16a34a" id="themeColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Xoriguer">
+<meta name="application-name" content="Xoriguer">
+<meta name="description" content="Escaneja un aliment i et diu si és bo per a tu.">
+<title>Xoriguer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="vendor/icons.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ============ INICI ============ -->
+<main id="home" class="screen">
+  <div class="top">
+    <div class="logo img"><img src="icons/mark-256.png" alt=""></div>
+    <div><h1>Xoriguer</h1><p data-i18n="app_sub"></p></div>
+  </div>
+
+  <section class="hero">
+    <button class="scanBtn" id="btnScan" data-i18n-aria="tab_scan"><i class="ti ti-scan"></i></button>
+    <h2 data-i18n="scan_title"></h2>
+    <p class="sub" data-i18n="scan_sub"></p>
+    <div class="manual">
+      <input id="manual" inputmode="numeric" data-i18n-ph="manual_ph" autocomplete="off">
+      <button id="btnManual" data-i18n-aria="search"><i class="ti ti-arrow-right"></i></button>
+    </div>
+  </section>
+
+  <div class="legend" id="legend"></div>
+  <button class="profBar" id="profBar"></button>
+
+  <div id="favWrap" class="hidden">
+    <div class="sectionTitle"><i class="ti ti-star"></i> <span data-i18n="fav_title"></span></div>
+    <div class="list" id="favList"></div>
+  </div>
+
+  <div id="recentWrap" class="hidden">
+    <div class="sectionTitle" data-i18n="recent_title"></div>
+    <div class="list" id="recent"></div>
+  </div>
+</main>
+
+<!-- ============ HISTORIAL ============ -->
+<main id="history" class="screen hidden">
+  <div class="top">
+    <div class="logo"><i class="ti ti-history"></i></div>
+    <div><h1 data-i18n="hist_title"></h1><p id="histCount"></p></div>
+  </div>
+  <div class="seg" id="histFilter">
+    <button data-f="all" class="on" data-i18n="filter_all"></button>
+    <button data-f="favs"><i class="ti ti-star"></i> <span data-i18n="filter_favs"></span></button>
+  </div>
+  <button class="cmpToggle hidden" id="btnCmpMode"><i class="ti ti-arrows-left-right"></i><span></span></button>
+  <div class="list" id="histList"></div>
+  <button class="clear hidden" id="btnClear"><i class="ti ti-trash"></i> <span data-i18n="hist_clear"></span></button>
+
+  <div class="sectionTitle" data-i18n="backup_title"></div>
+  <div class="backup">
+    <button id="btnExport"><i class="ti ti-download"></i><span data-i18n="export"></span></button>
+    <label for="importFile"><i class="ti ti-upload"></i><span data-i18n="import"></span></label>
+    <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+  </div>
+  <p class="note" data-i18n="backup_note"></p>
+</main>
+
+<!-- ============ PERFIL ============ -->
+<main id="prefs" class="screen hidden">
+  <div class="top">
+    <div class="logo"><i class="ti ti-user-heart"></i></div>
+    <div><h1 data-i18n="profile_title"></h1><p data-i18n="profile_sub"></p></div>
+  </div>
+  <div class="sectionTitle" style="margin-top:0" data-i18n="lang_title"></div>
+  <select class="langSel" id="langSel"></select>
+  <div class="sectionTitle" data-i18n="text_size"></div>
+  <div class="seg big" id="sizeSel">
+    <button data-z="1"><span style="font-size:14px">A</span> <span data-i18n="ts_1"></span></button>
+    <button data-z="2"><span style="font-size:18px">A</span> <span data-i18n="ts_2"></span></button>
+    <button data-z="3"><span style="font-size:22px">A</span> <span data-i18n="ts_3"></span></button>
+  </div>
+  <div class="sectionTitle" data-i18n="health_title"></div>
+  <div class="list" id="profList"></div>
+  <p class="note" data-i18n="health_note"></p>
+  <div class="sectionTitle" data-i18n="alerts_title"></div>
+  <div class="list" id="prefList"></div>
+  <p class="note" data-i18n="alerts_note"></p>
+</main>
+
+<nav class="tabbar">
+  <button class="tab on" data-tab="home"><i class="ti ti-scan"></i><span data-i18n="tab_scan"></span></button>
+  <button class="tab" data-tab="history"><i class="ti ti-history"></i><span data-i18n="tab_hist"></span></button>
+  <button class="tab" data-tab="prefs"><i class="ti ti-user-heart"></i><span data-i18n="tab_profile"></span></button>
+</nav>
+
+<!-- ============ COMPARAR ============ -->
+<div id="compare" class="overlay hidden"></div>
+
+<!-- ============ ESCÀNER ============ -->
+<div id="scanner" class="overlay hidden">
+  <div id="reader"></div>
+  <div class="scanTop">
+    <button class="round" id="btnClose" data-i18n-aria="close"><i class="ti ti-x"></i></button>
+    <span data-i18n="scanning"></span>
+    <button class="round" id="btnTorch" data-i18n-aria="torch"><i class="ti ti-bulb"></i></button>
+  </div>
+  <div class="frame"><b></b><div class="laser"></div></div>
+  <div class="scanCmp hidden" id="scanCmp"></div>
+  <div class="scanHint"><span data-i18n="scan_hint"></span><small data-i18n="scan_hint2"></small></div>
+</div>
+
+<!-- ============ RESULTAT ============ -->
+<div id="result" class="overlay hidden"></div>
+
+<!-- ============ AFEGIR INGREDIENTS ============ -->
+<div id="editor" class="overlay hidden">
+  <div class="edWrap">
+    <div class="edTop">
+      <button class="round" id="edClose" data-i18n-aria="back"><i class="ti ti-arrow-left"></i></button>
+      <div><h2 data-i18n="ed_title"></h2><p id="edCode"></p></div>
+    </div>
+    <label class="photoBtn" for="edPhoto"><i class="ti ti-camera"></i><span data-i18n="ed_photo"></span></label>
+    <input type="file" id="edPhoto" accept="image/*" capture="environment" class="hidden">
+    <p class="ocrInfo" data-i18n="ed_photo_tip"></p>
+    <img id="edPreview" class="preview hidden" alt="">
+    <div id="edOcr" class="hidden">
+      <div class="progress"><div id="edBar"></div></div>
+      <div class="ocrStatus" id="edStatus"></div>
+    </div>
+    <div class="field">
+      <label for="edName" data-i18n="ed_name"></label>
+      <input id="edName" data-i18n-ph="ed_name_ph" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="edIngr" data-i18n="ingredients"></label>
+      <textarea id="edIngr" data-i18n-ph="ed_ingr_ph"></textarea>
+      <div class="err hidden" id="edErr" data-i18n="ed_err"></div>
+    </div>
+    <div class="tip"><i class="ti ti-info-circle"></i> <span data-i18n-html="ed_tip"></span></div>
+    <div class="three">
+      <div class="field"><label for="edSugar" data-i18n="ed_sugar"></label><input id="edSugar" type="number" inputmode="decimal" step="0.1" min="0" placeholder="4,5"></div>
+      <div class="field"><label for="edSalt" data-i18n="ed_salt"></label><input id="edSalt" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0,1"></div>
+      <div class="field"><label for="edSat" data-i18n="ed_sat"></label><input id="edSat" type="number" inputmode="decimal" step="0.1" min="0" placeholder="1,2"></div>
+    </div>
+    <button class="primaryBtn" id="edSave"><i class="ti ti-sparkles"></i><span data-i18n="ed_save"></span></button>
+    <button class="delBtn hidden" id="edDelete"><i class="ti ti-trash"></i> <span data-i18n="ed_delete"></span></button>
+  </div>
+</div>
+
+<!-- ============ CARREGANT ============ -->
+<div id="loading" class="overlay hidden"><div><div class="spin" style="margin:auto"></div><p data-i18n="loading"></p></div></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
