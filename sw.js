@@ -1,9 +1,9 @@
 // Xoriguer · funcionament sense connexió
 // Quan canviïs l'app, puja el número de versió perquè els mòbils agafin la nova.
-const VERSION = "xoriguer-v6";
+const VERSION = "xoriguer-v7";
 // Tot el que cal per funcionar sense internet des del primer dia
 const APP = [
-  "./", "index.html", "manifest.json", "css/app.css",
+  "./", "index.html", "manifest.json", "css/app.css", "marca/marca.css", "marca/Montserrat-ExtraBold.ttf",
   "js/i18n.js", "js/rules.js", "js/app.js",
   "vendor/icons.css", "vendor/icons.woff2", "vendor/html5-qrcode.min.js",
   "vendor/fonts/pjs-400.woff2", "vendor/fonts/pjs-500.woff2", "vendor/fonts/pjs-600.woff2", "vendor/fonts/pjs-700.woff2", "vendor/fonts/pjs-800.woff2",
